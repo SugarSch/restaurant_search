@@ -1,12 +1,11 @@
-import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-// นำเข้าเพื่อแก้ปัญหา Icon ไม่แสดง (ปัญหาปกติของ Leaflet ใน React)
+
 import L from 'leaflet';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
-// แก้ไขเรื่อง Icon หาย
 let DefaultIcon = L.icon({
     iconUrl: markerIcon,
     shadowUrl: markerShadow,
@@ -15,37 +14,71 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
+function ChangeView({ center }) {
+    const map = useMap();
+    useEffect(() => {
+        map.setView(center, 13); // ขยับกล้องไปที่จุดกึ่งกลางใหม่
+    }, [center, map]);
+    return null;
+}
+
 function MapSection({ places }) {
-    // กำหนดจุดศูนย์กลาง (ควรเป็นพิกัดของร้านแรก หรือจุดกึ่งกลางของเขตนั้นๆ)
-    const defaultCenter = [13.8068, 100.5274];
+
+    // คำนวนศูนย์กลางแผนที่
+    const calculateCenter = (data) => {
+        if (!data || data.length === 0) return [13.8068, 100.5274]; 
+
+        try {
+            const total = data.reduce((acc, curr) => {
+                if (curr.location && curr.location.lat && curr.location.lng) {
+                    acc.lat += curr.location.lat;
+                    acc.lng += curr.location.lng;
+                    acc.count += 1;
+                }
+                return acc;
+            }, { lat: 0, lng: 0, count: 0 });
+
+            if (total.count === 0) return [13.8068, 100.5274];
+            return [total.lat / total.count, total.lng / total.count];
+        } catch (error) {
+            console.error("Error calculating center:", error);
+            return [13.8068, 100.5274];
+        }
+    };
+
+    const currentCenter = calculateCenter(places);
 
     return (
-        <section className="hidden md:block flex-1 relative h-full">
+        <section className="md:block flex-1 relative h-16 md:h-full order-1 md:order-2">
             <MapContainer 
-                center={defaultCenter} 
+                center={currentCenter} 
                 zoom={13} 
                 style={{ height: '100%', width: '100%' }}
             >
+                <ChangeView center={currentCenter} />
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    attribution='&copy; OpenStreetMap contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 
-                {/* วนลูปปักหมุดแบบ React Style */}
-                {places && places.map((res) => (
-                    <Marker 
-                        key={res.id} 
-                        position={[res.location.lat, res.location.lng]}
-                    >
-                        <Popup>
-                            <div className="text-sm">
-                                <strong className="text-blue-600">{res.name}</strong><br/>
-                                <span className="text-gray-500">{res.category}</span><br/>
-                                <p className="mt-1 border-t pt-1 text-xs">{res.description}</p>
-                            </div>
-                        </Popup>
-                    </Marker>
-                ))}
+                {places && places.map((res) => {
+                    if (!res.location || !res.location.lat || !res.location.lng) return null;
+                    
+                    return (
+                        <Marker 
+                            key={res.id} 
+                            position={[res.location.lat, res.location.lng]}
+                        >
+                            <Popup>
+                                <div className="text-sm">
+                                    <strong className="text-blue-600">{res.name}</strong><br/>
+                                    <span className="text-gray-500">{res.category}</span><br/>
+                                    <p className="mt-1 border-t pt-1 text-xs">{res.description}</p>
+                                </div>
+                            </Popup>
+                        </Marker>
+                    );
+                })}
             </MapContainer>
         </section>
     );
