@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+.map-container {
+  height: 100vh; /* or a specific height, e.g., 500px */
+  width: 100%;
+}

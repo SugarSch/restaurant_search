@@ -12,4 +12,8 @@ class SearchCache extends Model
         'keyword',
         'results'
     ];
+
+    protected $casts = [
+        'results' => 'array',
+    ];
 }
