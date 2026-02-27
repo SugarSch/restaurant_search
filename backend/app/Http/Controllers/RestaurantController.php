@@ -45,7 +45,7 @@ class RestaurantController extends Controller
         }
 
         //บันทึกข้อมูลลง search_caches
-        SearchCache::create(['keyword' => $keyword, 'results' => json_encode($searchResult)]);
+        SearchCache::create(['keyword' => $keyword, 'results' => $searchResult]);
 
         return response()->json([
                 'success' => true,
