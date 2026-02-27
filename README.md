@@ -19,37 +19,29 @@ The application fetches restaurant data from `database/data/restaurants.json`.
 
 ## 🚀 Setup instructions
 
-<b>For Database</b>
-
 1. copy /backend/.env.example to /backend/.env
-2. change database connection data in .env
-3. use this command to create table
-   
+2. change FRONTEND_URL={your frontend url} in backend/.env
+3. install libraries
+   ```
+   cd backend
+   ```
+   ```
+   composer install
+   ```
+4. use this command to create table
    ```
    php artisan migrate
    ```
+5. copy /fontend/.env.example to /fontend/.env
+6. change VITE_BASE_URL={your backend url} in frontend/.env
+7. install libraries
+   ```
+   cd forntend
+   ```
+   ```
+   npm install
+   ```
 
-<b>For Backend</b>
-
-1. change FRONTEND_URL={your frontend url} in backend/.env
-2. install libraries
-```
-cd backend
-```
-```
-composer install
-```
-
-<b>For Frontend</b>
-
-1. change VITE_BASE_URL={your backend url} in frontend/.env
-2. install libraries
-```
-cd forntend
-```
-```
-npm install
-```
 
 ## ▶️ How to run and test the app
 
