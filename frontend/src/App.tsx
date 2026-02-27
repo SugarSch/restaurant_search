@@ -31,9 +31,9 @@ function App() {
     return (
       <div className="flex flex-col h-screen w-screen font-sans">
         <Search keyword={keyword} setKeyword={setKeyword} fetchData={fetchRestaurants}/>
-        <main className="flex-1 flex flex-col md:flex-row overflow-hidden">
-          <List places={restaurants}/>
+        <main className="flex-1 flex flex-col md:flex-row h-screen overflow-hidden">
           <MapSection places={restaurants}/>
+          <List places={restaurants}/>
         </main>
       </div>
     )

@@ -2,7 +2,7 @@ import React from 'react'
 
 function List({places}){
 
-    return <section className="w-full md:w-1/3 overflow-y-auto p-4 bg-gray-50">
+    return <section className="w-full md:w-1/3 flex-1 md:h-full overflow-y-auto p-4 bg-gray-50 order-2 md:order-1">
           <h2 className="text-xl font-bold mb-4">Results ({places.length})</h2>
           {places.length == 0 ? <p>No results</p> : (
             <div className="grid gap-4">

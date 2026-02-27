@@ -14,14 +14,6 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-function ChangeView({ center }) {
-    const map = useMap();
-    useEffect(() => {
-        map.setView(center, 13); // ขยับกล้องไปที่จุดกึ่งกลางใหม่
-    }, [center, map]);
-    return null;
-}
-
 function MapSection({ places }) {
 
     // คำนวนศูนย์กลางแผนที่
@@ -48,11 +40,31 @@ function MapSection({ places }) {
 
     const currentCenter = calculateCenter(places);
 
+    function ChangeView({ places }) {
+        const map = useMap();
+
+        useEffect(() => {
+            if (places && places.length > 0) {
+                // สร้างกลุ่มของพิกัดทั้งหมดที่มี
+                const bounds = L.latLngBounds(places.map(res => [
+                    res.location.lat, 
+                    res.location.lng
+                ]));
+                
+                // สั่งให้แผนที่ขยับไปครอบคลุมพื้นที่ทั้งหมดนั้น
+                map.fitBounds(bounds, { padding: [50, 50] }); 
+                // padding ช่วยให้หมุดไม่ไปชิดขอบจอเกินไป
+            }
+        }, [places, map]);
+
+        return null;
+    }
+
     return (
-        <section className="md:block flex-1 relative h-16 md:h-full order-1 md:order-2">
+        <section className="w-full h-[300px] md:h-full md:flex-1 relative order-1 md:order-2 shrink-0">
             <MapContainer 
                 center={currentCenter} 
-                zoom={13} 
+                zoom={10} 
                 style={{ height: '100%', width: '100%' }}
             >
                 <ChangeView center={currentCenter} />
