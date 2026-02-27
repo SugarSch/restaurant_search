@@ -31,6 +31,8 @@ For Backend
 2. install libraries
 ```
 cd backend
+```
+```
 composer install
 ```
 
@@ -40,6 +42,8 @@ For Frontend
 2. install libraries
 ```
 cd forntend
+```
+```
 npm install
 ```
 
@@ -48,12 +52,16 @@ npm install
 For Backend
 ```
 cd backend
+```
+```
 php artisan serve
 ```
 
 For Frontend
 ```
 cd forntend
+```
+```
 npm run dev
 ```
 
