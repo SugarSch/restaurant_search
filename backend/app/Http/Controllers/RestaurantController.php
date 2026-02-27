@@ -26,7 +26,7 @@ class RestaurantController extends Controller
         }
 
         //กรณีไม่เจอ >>> เรียกจาก mock API json
-        $jsonPath = Storage::disk('local')->get('restaurants.json');
+        $jsonPath = file_get_contents(database_path('data/restaurants.json'));
         if (!$jsonPath) {
             return response()->json(['success' => false, 'msg' => 'Data file not found'], 404);
         }
